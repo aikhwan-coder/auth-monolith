@@ -3,16 +3,18 @@
 namespace Modules\Products\Controllers;
 
 use App\Http\Controllers\Controller;
+use Modules\Shared\Exceptions\InsufficientStockException;
+use Modules\Products\Models\Category;
 use Modules\Products\Models\Product;
 use Modules\Products\Requests\StoreProductRequest;
 use Modules\Products\Requests\UpdateProductRequest;
-use Modules\Products\Exceptions\InsufficientStockException;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('categories')->paginate(10);
+        $products = Product::paginate(10);
+
         return view('products.index', compact('products'));
     }
 
@@ -37,12 +39,28 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        $product->load('categories');
+        $categories = Category::query()->orderBy('name')->get();
+
+        return view('products.edit', compact('product', 'categories'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $validated = $request->validated();
+        $product->update($request->safe()->only([
+            'name',
+            'slug',
+            'description',
+            'price',
+            'stock',
+            'low_stock_threshold',
+            'is_active',
+        ]));
+
+        if ($validated['sync_categories'] ?? false) {
+            $product->categories()->sync($validated['category_ids'] ?? []);
+        }
 
         return redirect()
             ->route('products.index')

@@ -18,14 +18,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
-
-        $exceptions->render(function (\Modules\Books\Exceptions\BookNotAvailableException $e, $request) {
-            return $e->render($request);
-        });
-
-        $exceptions->render(function (\Modules\Authors\Exceptions\AuthorHasBooksException $e, $request) {
-            return $e->render($request);
-        });
     })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([

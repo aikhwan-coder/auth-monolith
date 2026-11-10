@@ -43,8 +43,7 @@
                                 <td class="py-3 px-6 text-center">{{ $product->stock }}</td>
                                 <td class="py-3 px-6 text-center">
                                     <div class="flex item-center justify-center space-x-2">
-                                        {{-- Tombol Edit (bisa ditambahkan nanti) --}}
-                                        <a href="#" class="text-blue-500 hover:text-blue-700 font-semibold">Edit</a>
+                                        <a href="{{ route('products.edit', $product) }}" class="rounded-md bg-indigo-50 px-3 py-1.5 font-semibold text-indigo-700 hover:bg-indigo-100">Edit</a>
 
                                         {{-- Form Hapus --}}
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
