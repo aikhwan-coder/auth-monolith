@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Catalog\Services\BookService;
 use Modules\Shared\Contracts\BookServiceInterface;
 
-class rviceProvider extends ServiceProvider
+class CatalogServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
